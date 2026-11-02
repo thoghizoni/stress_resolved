@@ -1,0 +1,6 @@
+build/
+*.so
+*.o
+log.lammps
+log.cite
+*.dump

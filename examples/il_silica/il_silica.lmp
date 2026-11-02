@@ -1,0 +1,93 @@
+#	||-------------------------------------------------------------------------||#  
+#	||                  State University of Campinas - UNICAMP                 ||# 
+#	||             Laboratory of Complex Systems Engineering - LESC            ||# 
+#	||-------------------------------------------------------------------------||# 
+#	||                      University Grenoble Alpes- UGA                     ||# 
+#	||            Laboratoire Interdisciplinaire de Physique - LiPhy           ||# 
+#	||-------------------------------------------------------------------------||# 
+#	||Test of compute stress/atom/resolved on the ionic liquid slit pore       ||#
+#	||  liquid cols + solid cols must equal stress/atom NULL pair kspace       ||#
+#	||Run with -var newt on  or  -var newt off                                 ||#
+#	||Plugin path: -var plugin /path/to/stress_atom_resolved.so                ||#
+#	||-------------------------------------------------------------------------||#
+#	||Thomaz Rossetti Ghizoni                                                  ||#
+#	||Feb 2025                                                                 ||#
+#	||-------------------------------------------------------------------------||#
+
+## INPUTS ####################################################################
+variable        temp      equal   300         #|| NVT Temperature [K]
+variable        dt        equal   0.5         #|| Simulation timestep
+variable        seed      index   4928459     #|| Random number
+variable        newt      index   on          #|| newton setting
+variable        plugin    index   ../../build/stress_atom_resolved.so  #|| compiled plugin
+
+## INITIALIZATION #############################################################
+units           real
+boundary        p p p
+atom_style      full
+newton          ${newt}
+
+plugin load     ${plugin}
+
+timestep        ${dt}
+
+# Force Fields ----------------------------------------------------------------
+bond_style      harmonic
+angle_style     harmonic
+dihedral_style  opls
+pair_style 	    hybrid lj/cut/coul/long 15.0 15.0 born/coul/long 15.0 15.0
+kspace_style    ewald2 1.0e-5
+
+# Setting the system ----------------------------------------------------------
+read_data       il_silica.lmpsys
+
+# Groups ----------------------------------------------------------------------
+group           liquid type 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+group           solid type 17 18 19 20
+
+
+## PAIR COEFFICIENTS ##########################################################
+include  pair_coefficients_long.txt
+
+
+## INITIAL VELOCITIES #########################################################
+velocity        all create ${temp} ${seed}
+
+
+# Computes -------------------------------------------------------------------
+compute res all stress/atom/resolved liquid solid
+compute ref all stress/atom NULL pair kspace
+
+# per-atom |A + B - ref| and |ref| for each component
+variable d1 atom abs(c_res[1]+c_res[7]-c_ref[1])
+variable d2 atom abs(c_res[2]+c_res[8]-c_ref[2])
+variable d3 atom abs(c_res[3]+c_res[9]-c_ref[3])
+variable d4 atom abs(c_res[4]+c_res[10]-c_ref[4])
+variable d5 atom abs(c_res[5]+c_res[11]-c_ref[5])
+variable d6 atom abs(c_res[6]+c_res[12]-c_ref[6])
+variable s1 atom abs(c_ref[1])
+variable s2 atom abs(c_ref[2])
+variable s3 atom abs(c_ref[3])
+variable s4 atom abs(c_ref[4])
+variable s5 atom abs(c_ref[5])
+variable s6 atom abs(c_ref[6])
+
+compute dmax all reduce max v_d1 v_d2 v_d3 v_d4 v_d5 v_d6
+compute smax all reduce max v_s1 v_s2 v_s3 v_s4 v_s5 v_s6
+variable maxdiff equal max(c_dmax)
+variable maxref  equal max(c_smax)
+variable reldiff equal v_maxdiff/v_maxref
+
+# totals of the liquid-partner and solid-partner xx columns (to see both are nonzero)
+compute tot all reduce sum c_res[1] c_res[7]
+
+thermo_style custom step temp pe c_tot[1] c_tot[2] v_maxref v_maxdiff v_reldiff
+thermo_modify format float %.10g
+thermo 50
+
+##||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||#
+##|||||||||||||||||||||||||||||       RUN       ||||||||||||||||||||||||||||||#
+##||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||#
+fix             mynve all nve
+
+run             200

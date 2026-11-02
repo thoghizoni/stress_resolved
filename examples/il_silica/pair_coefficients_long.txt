@@ -1,0 +1,262 @@
+###############################################################################
+#                    #/////// IONIC LIQUID ////////#                          #
+###############################################################################
+
+# Setting names for atom types and force field parameters  --------------------
+variable NAtype      equal  1
+variable CRtype      equal  2
+variable CWtype      equal  3
+variable C1type      equal  4
+variable HCRtype     equal  5
+variable HCWtype     equal  6
+variable H1type      equal  7
+variable C2type      equal  8
+variable CStype      equal  9
+variable HCtype      equal  10
+variable CTtype      equal  11
+variable CBTtype     equal  12
+variable FBTtype     equal  13
+variable SBTtype     equal  14
+variable NBTtype     equal  15
+variable OBTtype     equal  16
+
+
+# Pair interaction parameters  ------------------------------------------------
+pair_coeff ${NAtype} ${NAtype} lj/cut/coul/long 0.17 3.25
+pair_coeff ${NAtype} ${CRtype} lj/cut/coul/long 0.1336038921588739 2.69
+pair_coeff ${NAtype} ${CWtype} lj/cut/coul/long 0.09126883367283709 3.13375
+pair_coeff ${NAtype} ${C1type} lj/cut/coul/long 0.10592450141492289 3.375
+pair_coeff ${NAtype} ${HCRtype} lj/cut/coul/long 0.08746427842267951 2.351
+pair_coeff ${NAtype} ${HCWtype} lj/cut/coul/long 0.05976370135793131 2.6535
+pair_coeff ${NAtype} ${H1type} lj/cut/coul/long 0.07141428428542851 2.875
+pair_coeff ${NAtype} ${C2type} lj/cut/coul/long 0.33496268448888455 3.375
+pair_coeff ${NAtype} ${CStype} lj/cut/coul/long 0.10592450141492289 3.375
+pair_coeff ${NAtype} ${HCtype} lj/cut/coul/long 0.07141428428542851 2.875
+pair_coeff ${NAtype} ${CTtype} lj/cut/coul/long 0.10592450141492289 3.375
+pair_coeff ${NAtype} ${CBTtype} lj/cut/coul/long 0.05800844766066405 3.2
+pair_coeff ${NAtype} ${FBTtype} lj/cut/coul/long 0.05198384364396307 2.9524999999999997
+pair_coeff ${NAtype} ${SBTtype} lj/cut/coul/long 0.11290159432000951 3.66625
+pair_coeff ${NAtype} ${NBTtype} lj/cut/coul/long 0.09310096669745165 3.25
+pair_coeff ${NAtype} ${OBTtype} lj/cut/coul/long 0.10347680899602578 3.3566000000000003
+pair_coeff ${CRtype} ${CRtype} lj/cut/coul/long 0.105 2.13
+pair_coeff ${CRtype} ${CWtype} lj/cut/coul/long 0.07172865536171719 2.57375
+pair_coeff ${CRtype} ${C1type} lj/cut/coul/long 0.08324662155306965 2.815
+pair_coeff ${CRtype} ${HCRtype} lj/cut/coul/long 0.0687386354243376 1.791
+pair_coeff ${CRtype} ${HCWtype} lj/cut/coul/long 0.04696860653670705 2.0934999999999997
+pair_coeff ${CRtype} ${H1type} lj/cut/coul/long 0.05612486080160912 2.315
+pair_coeff ${CRtype} ${C2type} lj/cut/coul/long 0.26324893162176366 2.815
+pair_coeff ${CRtype} ${CStype} lj/cut/coul/long 0.08324662155306965 2.815
+pair_coeff ${CRtype} ${HCtype} lj/cut/coul/long 0.05612486080160912 2.315
+pair_coeff ${CRtype} ${CTtype} lj/cut/coul/long 0.08324662155306965 2.815
+pair_coeff ${CRtype} ${CBTtype} lj/cut/coul/long 0.045589143444464936 2.6399999999999997
+pair_coeff ${CRtype} ${FBTtype} lj/cut/coul/long 0.04085437553065767 2.3925
+pair_coeff ${CRtype} ${SBTtype} lj/cut/coul/long 0.08872995548291457 3.1062499999999997
+pair_coeff ${CRtype} ${NBTtype} lj/cut/coul/long 0.07316853832078375 2.69
+pair_coeff ${CRtype} ${OBTtype} lj/cut/coul/long 0.08132296723558481 2.7965999999999998
+pair_coeff ${CWtype} ${CWtype} lj/cut/coul/long 0.049 3.0175
+pair_coeff ${CWtype} ${C1type} lj/cut/coul/long 0.056868268832451725 3.25875
+pair_coeff ${CWtype} ${HCRtype} lj/cut/coul/long 0.046957427527495585 2.23475
+pair_coeff ${CWtype} ${HCWtype} lj/cut/coul/long 0.03208566658182435 2.5372500000000002
+pair_coeff ${CWtype} ${H1type} lj/cut/coul/long 0.03834057902536163 2.75875
+pair_coeff ${CWtype} ${C2type} lj/cut/coul/long 0.17983325610131182 3.25875
+pair_coeff ${CWtype} ${CStype} lj/cut/coul/long 0.056868268832451725 3.25875
+pair_coeff ${CWtype} ${HCtype} lj/cut/coul/long 0.03834057902536163 2.75875
+pair_coeff ${CWtype} ${CTtype} lj/cut/coul/long 0.056868268832451725 3.25875
+pair_coeff ${CWtype} ${CBTtype} lj/cut/coul/long 0.03114331388918013 3.08375
+pair_coeff ${CWtype} ${FBTtype} lj/cut/coul/long 0.02790885164244491 2.8362499999999997
+pair_coeff ${CWtype} ${SBTtype} lj/cut/coul/long 0.0606140990199475 3.55
+pair_coeff ${CWtype} ${NBTtype} lj/cut/coul/long 0.04998362731935328 3.13375
+pair_coeff ${CWtype} ${OBTtype} lj/cut/coul/long 0.05555416276031887 3.2403500000000003
+pair_coeff ${C1type} ${C1type} lj/cut/coul/long 0.066 3.5
+pair_coeff ${C1type} ${HCRtype} lj/cut/coul/long 0.054497706373754846 2.476
+pair_coeff ${C1type} ${HCWtype} lj/cut/coul/long 0.037237883935583665 2.7785
+pair_coeff ${C1type} ${H1type} lj/cut/coul/long 0.044497190922573975 3.0
+pair_coeff ${C1type} ${C2type} lj/cut/coul/long 0.20871032557111305 3.5
+pair_coeff ${C1type} ${CStype} lj/cut/coul/long 0.066 3.5
+pair_coeff ${C1type} ${HCtype} lj/cut/coul/long 0.044497190922573975 3.0
+pair_coeff ${C1type} ${CTtype} lj/cut/coul/long 0.066 3.5
+pair_coeff ${C1type} ${CBTtype} lj/cut/coul/long 0.0361442111547617 3.325
+pair_coeff ${C1type} ${FBTtype} lj/cut/coul/long 0.03239036893892998 3.0774999999999997
+pair_coeff ${C1type} ${SBTtype} lj/cut/coul/long 0.07034732404292292 3.79125
+pair_coeff ${C1type} ${NBTtype} lj/cut/coul/long 0.05800984399220532 3.375
+pair_coeff ${C1type} ${OBTtype} lj/cut/coul/long 0.06447487882888962 3.4816000000000003
+pair_coeff ${HCRtype} ${HCRtype} lj/cut/coul/long 0.045 1.452
+pair_coeff ${HCRtype} ${HCWtype} lj/cut/coul/long 0.03074817067729396 1.7545
+pair_coeff ${HCRtype} ${H1type} lj/cut/coul/long 0.03674234614174767 1.976
+pair_coeff ${HCRtype} ${C2type} lj/cut/coul/long 0.17233687939614087 2.476
+pair_coeff ${HCRtype} ${CStype} lj/cut/coul/long 0.054497706373754846 2.476
+pair_coeff ${HCRtype} ${HCtype} lj/cut/coul/long 0.03674234614174767 1.976
+pair_coeff ${HCRtype} ${CTtype} lj/cut/coul/long 0.054497706373754846 2.476
+pair_coeff ${HCRtype} ${CBTtype} lj/cut/coul/long 0.02984510010035148 2.301
+pair_coeff ${HCRtype} ${FBTtype} lj/cut/coul/long 0.026745466905627204 2.0534999999999997
+pair_coeff ${HCRtype} ${SBTtype} lj/cut/coul/long 0.058087391058645424 2.7672499999999998
+pair_coeff ${HCRtype} ${NBTtype} lj/cut/coul/long 0.04790005219203837 2.351
+pair_coeff ${HCRtype} ${OBTtype} lj/cut/coul/long 0.05323837901364015 2.4576000000000002
+pair_coeff ${HCWtype} ${HCWtype} lj/cut/coul/long 0.02101 2.057
+pair_coeff ${HCWtype} ${H1type} lj/cut/coul/long 0.02510577622779268 2.2785
+pair_coeff ${HCWtype} ${C2type} lj/cut/coul/long 0.1177565284814392 2.7785
+pair_coeff ${HCWtype} ${CStype} lj/cut/coul/long 0.037237883935583665 2.7785
+pair_coeff ${HCWtype} ${HCtype} lj/cut/coul/long 0.02510577622779268 2.2785
+pair_coeff ${HCWtype} ${CTtype} lj/cut/coul/long 0.037237883935583665 2.7785
+pair_coeff ${HCWtype} ${CBTtype} lj/cut/coul/long 0.020392938483700676 2.6035
+pair_coeff ${HCWtype} ${FBTtype} lj/cut/coul/long 0.018274981805736498 2.356
+pair_coeff ${HCWtype} ${SBTtype} lj/cut/coul/long 0.039690689210443296 3.06975
+pair_coeff ${HCWtype} ${NBTtype} lj/cut/coul/long 0.032729755116712986 2.6535
+pair_coeff ${HCWtype} ${OBTtype} lj/cut/coul/long 0.03637739476653049 2.7601
+pair_coeff ${H1type} ${H1type} lj/cut/coul/long 0.03 2.5
+pair_coeff ${H1type} ${C2type} lj/cut/coul/long 0.1407124727947029 3.0
+pair_coeff ${H1type} ${CStype} lj/cut/coul/long 0.044497190922573975 3.0
+pair_coeff ${H1type} ${HCtype} lj/cut/coul/long 0.03 2.5
+pair_coeff ${H1type} ${CTtype} lj/cut/coul/long 0.044497190922573975 3.0
+pair_coeff ${H1type} ${CBTtype} lj/cut/coul/long 0.02436842218938272 2.825
+pair_coeff ${H1type} ${FBTtype} lj/cut/coul/long 0.02183758228376026 2.5774999999999997
+pair_coeff ${H1type} ${SBTtype} lj/cut/coul/long 0.047428156194395756 3.29125
+pair_coeff ${H1type} ${NBTtype} lj/cut/coul/long 0.039110228841058955 2.875
+pair_coeff ${H1type} ${OBTtype} lj/cut/coul/long 0.043468954438771586 2.9816000000000003
+pair_coeff ${C2type} ${C2type} lj/cut/coul/long 0.66 3.5
+pair_coeff ${C2type} ${CStype} lj/cut/coul/long 0.20871032557111305 3.5
+pair_coeff ${C2type} ${HCtype} lj/cut/coul/long 0.1407124727947029 3.0
+pair_coeff ${C2type} ${CTtype} lj/cut/coul/long 0.20871032557111305 3.5
+pair_coeff ${C2type} ${CBTtype} lj/cut/coul/long 0.11429803147911166 3.325
+pair_coeff ${C2type} ${FBTtype} lj/cut/coul/long 0.10242734010019004 3.0774999999999997
+pair_coeff ${C2type} ${SBTtype} lj/cut/coul/long 0.22245777127356106 3.79125
+pair_coeff ${C2type} ${NBTtype} lj/cut/coul/long 0.18344323372640378 3.375
+pair_coeff ${C2type} ${OBTtype} lj/cut/coul/long 0.20388746896266086 3.4816000000000003
+pair_coeff ${CStype} ${CStype} lj/cut/coul/long 0.066 3.5
+pair_coeff ${CStype} ${HCtype} lj/cut/coul/long 0.044497190922573975 3.0
+pair_coeff ${CStype} ${CTtype} lj/cut/coul/long 0.066 3.5
+pair_coeff ${CStype} ${CBTtype} lj/cut/coul/long 0.0361442111547617 3.325
+pair_coeff ${CStype} ${FBTtype} lj/cut/coul/long 0.03239036893892998 3.0774999999999997
+pair_coeff ${CStype} ${SBTtype} lj/cut/coul/long 0.07034732404292292 3.79125
+pair_coeff ${CStype} ${NBTtype} lj/cut/coul/long 0.05800984399220532 3.375
+pair_coeff ${CStype} ${OBTtype} lj/cut/coul/long 0.06447487882888962 3.4816000000000003
+pair_coeff ${HCtype} ${HCtype} lj/cut/coul/long 0.03 2.5
+pair_coeff ${HCtype} ${CTtype} lj/cut/coul/long 0.044497190922573975 3.0
+pair_coeff ${HCtype} ${CBTtype} lj/cut/coul/long 0.02436842218938272 2.825
+pair_coeff ${HCtype} ${FBTtype} lj/cut/coul/long 0.02183758228376026 2.5774999999999997
+pair_coeff ${HCtype} ${SBTtype} lj/cut/coul/long 0.047428156194395756 3.29125
+pair_coeff ${HCtype} ${NBTtype} lj/cut/coul/long 0.039110228841058955 2.875
+pair_coeff ${HCtype} ${OBTtype} lj/cut/coul/long 0.043468954438771586 2.9816000000000003
+pair_coeff ${CTtype} ${CTtype} lj/cut/coul/long 0.066 3.5
+pair_coeff ${CTtype} ${CBTtype} lj/cut/coul/long 0.0361442111547617 3.325
+pair_coeff ${CTtype} ${FBTtype} lj/cut/coul/long 0.03239036893892998 3.0774999999999997
+pair_coeff ${CTtype} ${SBTtype} lj/cut/coul/long 0.07034732404292292 3.79125
+pair_coeff ${CTtype} ${NBTtype} lj/cut/coul/long 0.05800984399220532 3.375
+pair_coeff ${CTtype} ${OBTtype} lj/cut/coul/long 0.06447487882888962 3.4816000000000003
+pair_coeff ${CBTtype} ${CBTtype} lj/cut/coul/long 0.019794 3.15
+pair_coeff ${CBTtype} ${FBTtype} lj/cut/coul/long 0.017738247489535147 2.9025
+pair_coeff ${CBTtype} ${SBTtype} lj/cut/coul/long 0.0385249777936341 3.61625
+pair_coeff ${CBTtype} ${NBTtype} lj/cut/coul/long 0.03176848561074323 3.2
+pair_coeff ${CBTtype} ${OBTtype} lj/cut/coul/long 0.0353089944631676 3.3066
+pair_coeff ${FBTtype} ${FBTtype} lj/cut/coul/long 0.015896 2.655
+pair_coeff ${FBTtype} ${SBTtype} lj/cut/coul/long 0.034523875448738375 3.3687499999999995
+pair_coeff ${FBTtype} ${NBTtype} lj/cut/coul/long 0.02846909468177729 2.9524999999999997
+pair_coeff ${FBTtype} ${OBTtype} lj/cut/coul/long 0.03164189564485668 3.0591
+pair_coeff ${SBTtype} ${SBTtype} lj/cut/coul/long 0.074981 4.0825
+pair_coeff ${SBTtype} ${NBTtype} lj/cut/coul/long 0.06183086807574353 3.66625
+pair_coeff ${SBTtype} ${OBTtype} lj/cut/coul/long 0.06872174535763771 3.77285
+pair_coeff ${NBTtype} ${NBTtype} lj/cut/coul/long 0.050987 3.25
+pair_coeff ${NBTtype} ${OBTtype} lj/cut/coul/long 0.05666935851939741 3.3566000000000003
+pair_coeff ${OBTtype} ${OBTtype} lj/cut/coul/long 0.062985 3.4632
+
+###############################################################################
+#                       #/////// SILICA ////////#                             #
+###############################################################################
+
+# Setting names for atom types and force field parameters  --------------------
+variable SI          equal  17
+variable OSI         equal  18
+variable OH          equal  19
+variable H           equal  20
+
+# Pair coefficients -----------------------------------------------------------
+pair_coeff 	    ${SI} ${SI}  born/coul/long 72652.504033 0.3506986443 0.0 14453.464113 0.0
+pair_coeff 	    ${SI} ${OSI} born/coul/long 623322.749879 0.1938508194 0.0 3415.298328 0.0
+pair_coeff 	    ${SI} ${OH}  born/coul/long 623322.749879 0.1938508194 0.0 3415.298328 0.0
+pair_coeff 	    ${SI} ${H}   born/coul/long 0.0 1.0 0.0 0.0 0.0
+
+pair_coeff 	    ${OSI} ${OSI} born/coul/long 15210.863514 0.3860905475 0.0 618.877971 0.0
+pair_coeff 	    ${OSI} ${OH}  born/coul/long 15210.863514 0.3860905475 0.0 618.877971 0.0
+pair_coeff 	    ${OSI} ${H}   born/coul/long 0.0 1.0 0.0 0.0 0.0
+
+pair_coeff 	    ${OH} ${OH} born/coul/long 15210.863514 0.3860905475 0.0 618.877971 0.0
+pair_coeff 	    ${OH} ${H}  born/coul/long 0.0 1.0 0.0 0.0 0.0
+
+pair_coeff 	    ${H} ${H} born/coul/long 0.0 1.0 0.0 0.0 0.0
+
+
+###############################################################################
+#                     #/////// CROSS TERMS ////////#                          #
+###############################################################################
+
+# Setting cross interaction parameters
+pair_coeff 	    ${SI} ${NAtype}  lj/cut/coul/long 0.147243636 3.5225
+pair_coeff 	    ${SI} ${CRtype}  lj/cut/coul/long 0.1157195463 2.9625
+pair_coeff 	    ${SI} ${CWtype}  lj/cut/coul/long 0.07905149954 3.40625
+pair_coeff 	    ${SI} ${C1type}  lj/cut/coul/long 0.09174534546 3.6475
+pair_coeff 	    ${SI} ${HCRtype} lj/cut/coul/long 0.07575622573 2.6235
+pair_coeff 	    ${SI} ${HCWtype} lj/cut/coul/long 0.05176367463 2.926
+pair_coeff 	    ${SI} ${H1type}  lj/cut/coul/long 0.06185469929 3.1475
+pair_coeff 	    ${SI} ${C2type}  lj/cut/coul/long 0.2901242564 3.6475
+pair_coeff 	    ${SI} ${CStype}  lj/cut/coul/long 0.09174534546 3.6475
+pair_coeff 	    ${SI} ${HCtype}  lj/cut/coul/long 0.06185469929 3.1475
+pair_coeff 	    ${SI} ${CTtype}  lj/cut/coul/long 0.09174534546 3.6475
+pair_coeff 	    ${SI} ${CBTtype} lj/cut/coul/long 0.05024338089 3.4725
+pair_coeff 	    ${SI} ${FBTtype} lj/cut/coul/long 0.04502523618 3.225
+pair_coeff 	    ${SI} ${SBTtype} lj/cut/coul/long 0.09778847797 3.93875
+pair_coeff 	    ${SI} ${NBTtype} lj/cut/coul/long 0.08063838147 3.5225
+pair_coeff 	    ${SI} ${OBTtype} lj/cut/coul/long 0.08962530351 3.6291
+
+
+pair_coeff 	    ${OSI} ${NAtype}  lj/cut/coul/long 0.1623493566 3.202
+pair_coeff 	    ${OSI} ${CRtype}  lj/cut/coul/long 0.1275912113 2.642
+pair_coeff 	    ${OSI} ${CWtype}  lj/cut/coul/long 0.08716139071 3.08575
+pair_coeff 	    ${OSI} ${C1type}  lj/cut/coul/long 0.1011574979	3.327
+pair_coeff 	    ${OSI} ${HCRtype} lj/cut/coul/long 0.08352805485 2.303
+pair_coeff 	    ${OSI} ${HCWtype} lj/cut/coul/long 0.05707410859 2.6055
+pair_coeff 	    ${OSI} ${H1type}  lj/cut/coul/long 0.06820037119 2.827
+pair_coeff 	    ${OSI} ${C2type}  lj/cut/coul/long 0.3198880959	3.327
+pair_coeff 	    ${OSI} ${CStype}  lj/cut/coul/long 0.1011574979	3.327
+pair_coeff 	    ${OSI} ${HCtype}  lj/cut/coul/long 0.06820037119 2.827
+pair_coeff 	    ${OSI} ${CTtype}  lj/cut/coul/long 0.1011574979	3.327
+pair_coeff 	    ${OSI} ${CBTtype} lj/cut/coul/long 0.05539784796 3.152
+pair_coeff 	    ${OSI} ${FBTtype} lj/cut/coul/long 0.04964437392 2.9045
+pair_coeff 	    ${OSI} ${SBTtype} lj/cut/coul/long 0.1078205952	3.61825
+pair_coeff 	    ${OSI} ${NBTtype} lj/cut/coul/long 0.08891107081 3.202
+pair_coeff 	    ${OSI} ${OBTtype} lj/cut/coul/long 0.09881996094 3.3086
+
+
+pair_coeff 	    ${OH} ${NAtype}  lj/cut/coul/long 0.1623493566 3.202
+pair_coeff 	    ${OH} ${CRtype}  lj/cut/coul/long 0.1275912113 2.642
+pair_coeff 	    ${OH} ${CWtype}  lj/cut/coul/long 0.08716139071 3.08575
+pair_coeff 	    ${OH} ${C1type}  lj/cut/coul/long 0.1011574979	3.327
+pair_coeff 	    ${OH} ${HCRtype} lj/cut/coul/long 0.08352805485 2.303
+pair_coeff 	    ${OH} ${HCWtype} lj/cut/coul/long 0.05707410859 2.6055
+pair_coeff 	    ${OH} ${H1type}  lj/cut/coul/long 0.06820037119 2.827
+pair_coeff 	    ${OH} ${C2type}  lj/cut/coul/long 0.3198880959	3.327
+pair_coeff 	    ${OH} ${CStype}  lj/cut/coul/long 0.1011574979	3.327
+pair_coeff 	    ${OH} ${HCtype}  lj/cut/coul/long 0.06820037119 2.827
+pair_coeff 	    ${OH} ${CTtype}  lj/cut/coul/long 0.1011574979	3.327
+pair_coeff 	    ${OH} ${CBTtype} lj/cut/coul/long 0.05539784796 3.152
+pair_coeff 	    ${OH} ${FBTtype} lj/cut/coul/long 0.04964437392 2.9045
+pair_coeff 	    ${OH} ${SBTtype} lj/cut/coul/long 0.1078205952	3.61825
+pair_coeff 	    ${OH} ${NBTtype} lj/cut/coul/long 0.08891107081 3.202
+pair_coeff 	    ${OH} ${OBTtype} lj/cut/coul/long 0.09881996094 3.3086
+
+
+pair_coeff 	    ${H} ${NAtype}  lj/cut/coul/long 0 1.625 
+pair_coeff 	    ${H} ${CRtype}  lj/cut/coul/long 0 1.065
+pair_coeff 	    ${H} ${CWtype}  lj/cut/coul/long 0 1.50875 
+pair_coeff 	    ${H} ${C1type}  lj/cut/coul/long 0 1.75
+pair_coeff 	    ${H} ${HCRtype} lj/cut/coul/long 0 0.726
+pair_coeff 	    ${H} ${HCWtype} lj/cut/coul/long 0 1.0285
+pair_coeff 	    ${H} ${H1type}  lj/cut/coul/long 0 1.25
+pair_coeff 	    ${H} ${C2type}  lj/cut/coul/long 0 1.75
+pair_coeff 	    ${H} ${CStype}  lj/cut/coul/long 0 1.75
+pair_coeff 	    ${H} ${HCtype}  lj/cut/coul/long 0 1.25
+pair_coeff 	    ${H} ${CTtype}  lj/cut/coul/long 0 1.75
+pair_coeff 	    ${H} ${CBTtype} lj/cut/coul/long 0 1.575
+pair_coeff 	    ${H} ${FBTtype} lj/cut/coul/long 0 1.3275
+pair_coeff 	    ${H} ${SBTtype} lj/cut/coul/long 0 2.04125
+pair_coeff 	    ${H} ${NBTtype} lj/cut/coul/long 0 1.625
+pair_coeff 	    ${H} ${OBTtype} lj/cut/coul/long 0 1.7316
