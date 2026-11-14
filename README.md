@@ -1,6 +1,6 @@
 # compute stress/atom/resolved
 
-A LAMMPS plugin that splits the per-atom virial stress of every atom into two parts. One part comes from the atom's interaction partners in group A and the other from its partners in group B. It covers both pair and long-range (Ewald) Coulomb interactions.
+A LAMMPS plugin that computes the stress from the interactions between two groups of atoms, like the stock `compute stress/tally`, but including long-range (Ewald) Coulomb interactions as well as pair interactions. It has the same syntax and outputs as `stress/tally`.
 
 A typical use is a liquid in contact with a solid. You can separate the stress an atom feels from the liquid from the stress it feels from the wall.
 
@@ -8,34 +8,49 @@ The plugin adds two styles to LAMMPS:
 
 | style | kind | purpose |
 |---|---|---|
-| `stress/atom/resolved` | compute | the 12-column resolved per-atom stress |
+| `stress/atom/resolved` | compute | `stress/tally` with pair + k-space: per-atom stress and a global scalar |
 | `ewald2` | kspace | the stock LAMMPS `ewald` with its reciprocal-space data exposed to the compute. It gives exactly the same forces, energies and pressures as `ewald`. |
 
 ## What it computes
 
-For each atom *i* in the compute group, a per-atom array with 12 columns:
+The same outputs as `compute stress/tally`, for `compute ID group1 stress/atom/resolved group2`:
 
-| columns | content |
+| output | content |
 |---|---|
-| 1–6 | stress of atom *i* from partners *j* in **group A**: xx, yy, zz, xy, xz, yz |
-| 7–12 | stress of atom *i* from partners *j* in **group B**: xx, yy, zz, xy, xz, yz |
+| per-atom array, 6 columns | stress of each atom from the group1–group2 interactions: xx, yy, zz, xy, xz, yz |
+| global scalar | (xx + yy + zz)/3 of the total virial of these interactions, summed over all atoms (intensive) |
 
-**Pair part.** Every pair *i–j* within the cutoff gives ½ **r**<sub>ij</sub> ⊗ **F**<sub>ij</sub> to atom *i*. The group of *j* decides which column block it goes into. Atom *j* gets the same amount, in the block chosen by the group of *i*. Forces come from the pair style's `single()` function, so special-bond factors are applied as in the pair style.
+As in `stress/tally`, an interaction *i–j* counts when *i* is in group1 and *j* in group2, or *i* in group2 and *j* in group1. Atoms of group1 get the stress from group2, and atoms of group2 the stress from group1. The two groups may overlap or be the same group.
+
+**Pair part.** Every counted pair *i–j* within the cutoff gives ½ **r**<sub>ij</sub> ⊗ **F**<sub>ij</sub> to atom *i* and the same amount to atom *j*. Forces come from the pair style's `single()` function, so special-bond factors are applied as in the pair style.
 
 **k-space part.** The Ewald per-atom virial of atom *i* is
 
   W<sub>i</sub> = q<sub>i</sub> Σ<sub>k</sub> u<sub>k</sub> **v**<sub>k</sub> Re[ e<sup>i**k**·**r**<sub>i</sub></sup> S(**k**)* ],  where S(**k**) = Σ<sub>j</sub> q<sub>j</sub> e<sup>i**k**·**r**<sub>j</sub></sup>
 
-The compute splits the structure factor into S = S<sub>A</sub> + S<sub>B</sub>, summing only over charges in A or only over charges in B. W<sub>i</sub> is then evaluated once with S<sub>A</sub> (columns 1–6) and once with S<sub>B</sub> (columns 7–12).
+The compute applies the pair rule to the sum over *j* in S. It splits the structure factor into S = S<sub>a</sub> + S<sub>b</sub> + S<sub>c</sub>, with charges in group1 only, in group2 only, and in both. W<sub>i</sub> is evaluated with the charges atom *i* interacts with:
 
-**Units and sign** are the same as `compute stress/atom`: stress × volume, in pressure·volume units (atm·Å³ for `units real`). As with `stress/atom`, the per-atom pressure tensor is the negative of these values divided by a volume.
+- S<sub>b</sub> + S<sub>c</sub> for *i* in group1 only;
+- S<sub>a</sub> + S<sub>c</sub> for *i* in group2 only;
+- the full S for *i* in both groups.
 
-**Consistency.** If A and B together contain every atom, then for each component, columns *n* + *n*+6 equal `compute stress/atom NULL pair kspace` to machine precision. This holds with newton on and off and on any number of MPI ranks.
+**Units and sign** are the same as `compute stress/tally`:
+
+- The per-atom values are stress × volume, in pressure·volume units (atm·Å³ for `units real`), as for `compute stress/atom`. The per-atom pressure tensor is the negative of these values divided by a volume.
+- The global scalar is the raw virial in energy units, not converted to pressure. It equals `stress/tally`'s scalar. Multiplying it by `nktv2p` (68568.415 for `units real`) and dividing by the volume gives the pressure from these interactions.
+
+**Consistency.**
+
+- **Pair only:** without k-space, the per-atom array and the scalar equal those of `compute stress/tally` with the same groups.
+- **Disjoint groups covering all atoms:** for groups `liquid` and `solid`, `ll + ls + ss` equals `compute stress/atom NULL pair kspace` to machine precision. Here `ll`, `ls` and `ss` are `liquid … liquid`, `liquid … solid` and `solid … solid`.
+- **Whole system:** the scalar of `all … all` equals the pair + k-space pressure times volume / `nktv2p`.
+
+These hold with newton on and off and on any number of MPI ranks.
 
 ### What is not included
 
 - bond, angle, dihedral and improper terms, fixes, and kinetic energy. Only `pair` and `kspace` contributions are included.
-- interactions with partners that are in neither A nor B. These are left out of both blocks.
+- interactions that are not between group1 and group2.
 
 ## Requirements
 
@@ -43,7 +58,6 @@ The compute splits the structure factor into S = S<sub>A</sub> + S<sub>B</sub>, 
 - A pair style that implements `single()`. Most pairwise styles do, for example `lj/cut/coul/long`, `born/coul/long`, `buck/coul/long` and `hybrid` / `hybrid/overlay` of such styles. Many-body styles (Tersoff, EAM, ReaxFF, …) do not.
 - Long-range Coulomb has to use `kspace_style ewald2`. Other k-space styles (`ewald`, `pppm`, …) are rejected with an error. Without a k-space style the compute gives the pair part only.
 - With `ewald2`, slab correction (`kspace_modify slab`) is not supported and `kspace_modify compute` must be `yes` (the default).
-- Groups A and B must be **disjoint**. If any atom belongs to both, LAMMPS stops with an error. They do not have to cover all atoms.
 
 Tested with LAMMPS 2 Aug 2023 and OpenMPI on Linux.
 
@@ -107,11 +121,13 @@ Both `-z nodelete` and `-rdynamic` are GNU/Linux linker options. On macOS, `CMak
 ## Usage
 
 ```
-compute ID group-ID stress/atom/resolved groupA groupB
+compute ID group-ID stress/atom/resolved group2-ID
 ```
 
-- `ID`, `group-ID`: as for any compute. Atoms outside `group-ID` get zeros, but they still count as partners if they belong to A or B.
-- `groupA`, `groupB`: the two disjoint partner groups.
+- `ID`, `group-ID`: as for any compute. `group-ID` is the first group of the interactions.
+- `group2-ID`: the second group. It may overlap with `group-ID` or be the same group.
+
+Atoms in neither group get zeros.
 
 Example: a liquid (types 1–16) against a silica wall (types 17–20). The complete, runnable version is in [`examples/il_silica`](examples/il_silica).
 
@@ -128,23 +144,24 @@ read_data       system.lmpsys
 group           liquid type 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
 group           solid  type 17 18 19 20
 
-compute         res all stress/atom/resolved liquid solid
+compute         ls liquid stress/atom/resolved solid
 
-# per-atom output: id, then stress from liquid partners (1-6) and from solid partners (7-12)
-dump            d all custom 100 resolved.dump id c_res[*]
+# per-atom output: liquid atoms get the stress from the solid, solid atoms the stress from the liquid
+dump            d all custom 100 resolved.dump id c_ls[*]
 
-# or a global total of each block
-compute         tot all reduce sum c_res[*]
-thermo_style    custom step temp press c_tot[1] c_tot[7]
+# global scalar, same as compute stress/tally
+thermo_style    custom step temp press c_ls
 ```
 
 The array can be used anywhere per-atom arrays are accepted: `dump custom`, `fix ave/atom`, `fix ave/chunk`, `compute reduce`, atom-style variables, and so on.
 
-To check that A + B reproduces LAMMPS's own per-atom stress when A ∪ B is all atoms:
+To check that the parts reproduce LAMMPS's own per-atom stress:
 
 ```
+compute ll  liquid stress/atom/resolved liquid
+compute ss  solid  stress/atom/resolved solid
 compute ref all stress/atom NULL pair kspace
-variable d1 atom abs(c_res[1]+c_res[7]-c_ref[1])
+variable d1 atom abs(c_ll[1]+c_ls[1]+c_ss[1]-c_ref[1])
 ```
 
 ## Cost
@@ -152,7 +169,7 @@ variable d1 atom abs(c_res[1]+c_res[7]-c_ref[1])
 The compute only does work on steps where something asks for it (a dump, thermo, fix ave/…). On those steps it:
 
 - builds an occasional half neighbor list and calls `single()` on every pair within the cutoff
-- runs one extra pass over atoms × k-vectors, and one `MPI_Allreduce` of 4 × (number of k-vectors) values
+- runs one extra pass over atoms × k-vectors, and one `MPI_Allreduce` of 6 × (number of k-vectors) values
 
 For an ionic liquid in a silica pore (10281 atoms), evaluating it on every step costs about 2.3 times a plain MD step.
 

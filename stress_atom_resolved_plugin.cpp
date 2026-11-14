@@ -33,7 +33,7 @@ extern "C" void lammpsplugin_init(void *lmp, void *handle, void *regfunc)
 
   plugin.style = "compute";
   plugin.name = "stress/atom/resolved";
-  plugin.info = "Per-atom pair + kspace virial resolved by partner group";
+  plugin.info = "Pair + kspace stress/tally between two groups";
   plugin.creator.v2 = (lammpsplugin_factory2 *) &stress_atom_resolved_creator;
   (*register_plugin)(&plugin, lmp);
 }

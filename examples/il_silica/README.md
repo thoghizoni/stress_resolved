@@ -5,11 +5,13 @@ This example tests a build of the plugin. The system has 10281 atoms: an ionic l
 The input defines
 
 ```
-compute res all stress/atom/resolved liquid solid
+compute ll liquid stress/atom/resolved liquid
+compute ls liquid stress/atom/resolved solid
+compute ss solid stress/atom/resolved solid
 compute ref all stress/atom NULL pair kspace
 ```
 
-and checks that, for every atom and component, liquid columns + solid columns = `stress/atom`. This must hold because `liquid` and `solid` together contain all atoms.
+and checks that, for every atom and component, `ll + ls + ss` = `stress/atom`. This must hold because `liquid` and `solid` are disjoint and together contain all atoms. Every pair and k-space term then falls in exactly one of the three computes, as in `compute stress/tally`.
 
 ## Files
 
@@ -40,14 +42,14 @@ On 4 cores the run takes about 15 s.
 ## Expected output
 
 ```
-Step  Temp  PotEng  c_tot[1]  c_tot[2]  v_maxref  v_maxdiff  v_reldiff
+Step  Temp  PotEng  c_ll  c_ls  c_ss  v_maxref  v_maxdiff  v_reldiff
 ```
 
 | column | meaning |
 |---|---|
-| `c_tot[1]`, `c_tot[2]` | sum over all atoms of the xx stress from liquid partners and from solid partners |
+| `c_ll`, `c_ls`, `c_ss` | global scalars (as in `stress/tally`) of the liquid–liquid, liquid–solid and solid–solid interactions |
 | `v_maxref` | largest \|stress/atom\| component of any atom |
-| `v_maxdiff` | largest \|liquid + solid − stress/atom\| of any atom and component |
+| `v_maxdiff` | largest \|ll + ls + ss − stress/atom\| of any atom and component |
 | `v_reldiff` | `v_maxdiff / v_maxref` |
 
 `v_reldiff` should be at rounding level, around 1e-15 (anything below about 1e-10 is fine), at every output step, with newton on and off and on any number of cores. The other values change with the number of cores and the MPI library, because the trajectory depends on floating-point summation order.

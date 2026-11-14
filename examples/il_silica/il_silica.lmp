@@ -6,7 +6,8 @@
 #	||            Laboratoire Interdisciplinaire de Physique - LiPhy           ||# 
 #	||-------------------------------------------------------------------------||# 
 #	||Test of compute stress/atom/resolved on the ionic liquid slit pore       ||#
-#	||  liquid cols + solid cols must equal stress/atom NULL pair kspace       ||#
+#	||  liquid-liquid + liquid-solid + solid-solid must equal                  ||#
+#	||  stress/atom NULL pair kspace                                           ||#
 #	||Run with -var newt on  or  -var newt off                                 ||#
 #	||Plugin path: -var plugin /path/to/stress_atom_resolved.so                ||#
 #	||-------------------------------------------------------------------------||#
@@ -55,16 +56,18 @@ velocity        all create ${temp} ${seed}
 
 
 # Computes -------------------------------------------------------------------
-compute res all stress/atom/resolved liquid solid
+compute ll liquid stress/atom/resolved liquid
+compute ls liquid stress/atom/resolved solid
+compute ss solid stress/atom/resolved solid
 compute ref all stress/atom NULL pair kspace
 
-# per-atom |A + B - ref| and |ref| for each component
-variable d1 atom abs(c_res[1]+c_res[7]-c_ref[1])
-variable d2 atom abs(c_res[2]+c_res[8]-c_ref[2])
-variable d3 atom abs(c_res[3]+c_res[9]-c_ref[3])
-variable d4 atom abs(c_res[4]+c_res[10]-c_ref[4])
-variable d5 atom abs(c_res[5]+c_res[11]-c_ref[5])
-variable d6 atom abs(c_res[6]+c_res[12]-c_ref[6])
+# per-atom |ll + ls + ss - ref| and |ref| for each component
+variable d1 atom abs(c_ll[1]+c_ls[1]+c_ss[1]-c_ref[1])
+variable d2 atom abs(c_ll[2]+c_ls[2]+c_ss[2]-c_ref[2])
+variable d3 atom abs(c_ll[3]+c_ls[3]+c_ss[3]-c_ref[3])
+variable d4 atom abs(c_ll[4]+c_ls[4]+c_ss[4]-c_ref[4])
+variable d5 atom abs(c_ll[5]+c_ls[5]+c_ss[5]-c_ref[5])
+variable d6 atom abs(c_ll[6]+c_ls[6]+c_ss[6]-c_ref[6])
 variable s1 atom abs(c_ref[1])
 variable s2 atom abs(c_ref[2])
 variable s3 atom abs(c_ref[3])
@@ -78,10 +81,7 @@ variable maxdiff equal max(c_dmax)
 variable maxref  equal max(c_smax)
 variable reldiff equal v_maxdiff/v_maxref
 
-# totals of the liquid-partner and solid-partner xx columns (to see both are nonzero)
-compute tot all reduce sum c_res[1] c_res[7]
-
-thermo_style custom step temp pe c_tot[1] c_tot[2] v_maxref v_maxdiff v_reldiff
+thermo_style custom step temp pe c_ll c_ls c_ss v_maxref v_maxdiff v_reldiff
 thermo_modify format float %.10g
 thermo 50
 
