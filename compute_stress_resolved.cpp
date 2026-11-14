@@ -68,8 +68,24 @@ void ComputeStressResolved::init()
 {
   if (force->pair == nullptr)
     error->all(FLERR, "Compute stress/resolved requires a pair style");
+
+  // single() of these styles does not return the force of compute():
+  // EAM adds the embedding energy to phi before taking its derivative,
+  // DPD styles give only the conservative force, or none
+  // pair_match() also checks hybrid sub-styles and accelerated variants
+
+  for (const char *pattern : {"^eam", "dpd"}) {
+    Pair *bad = force->pair_match(pattern, 0, 1);
+    if (bad)
+      error->all(FLERR, "Compute stress/resolved does not support pair style {}: its single() "
+                 "does not give the force used in the run", force->pair_match_ptr(bad));
+  }
+
   if (force->pair->single_enable == 0)
     error->all(FLERR, "Pair style does not support compute stress/resolved");
+  if (force->pair->manybody_flag && (comm->me == 0))
+    error->warning(FLERR, "Compute stress/resolved used with many-body pair style {}: single() "
+                   "may not include the many-body part of the forces", force->pair_style);
 
   ewald = nullptr;
   if (force->kspace) {
