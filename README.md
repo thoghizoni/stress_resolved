@@ -54,7 +54,7 @@ These hold with newton on and off and on any number of MPI ranks.
 
 ## Requirements
 
-- LAMMPS built as a shared library or executable with the **PLUGIN** and **KSPACE** packages. The plugin must be compiled against the same LAMMPS version and with the same MPI.
+- LAMMPS built as a shared library or executable with the **PLUGIN** and **KSPACE** packages. The plugin must be compiled against the same LAMMPS version, with the same MPI and the same integer sizes (`LAMMPS_SIZES`, see below).
 - A pair style that implements `single()`. Most pairwise styles do, for example `lj/cut/coul/long`, `born/coul/long`, `buck/coul/long` and `hybrid` / `hybrid/overlay` of such styles. Most many-body styles (Tersoff, ReaxFF, …) do not.
 - EAM and DPD styles (`eam*`, `dpd*`, `edpd`, `tdpd`, `mdpd*`, `sdpd*`), on their own or as `hybrid` sub-styles, are rejected with an error. They implement `single()`, but it does not return the force used in the run: EAM's `single()` adds the embedding energy to the pair potential before differentiating it (LAMMPS 2 Aug 2023), and DPD's gives only the conservative force, without the dissipative and random forces.
 - Other many-body styles that implement `single()` (for example `ilp/graphene/hbn`, `kolmogorov/crespi/full`) are accepted with a warning: their `single()` may leave out the many-body part of the forces.
@@ -94,6 +94,7 @@ Optional variables, set in the environment:
 |---|---|---|
 | `LAMMPS_SRC` | the LAMMPS `src` folder, if not given as the argument (it must contain `lammpsplugin.h` and `KSPACE/ewald.h`) | none, required |
 | `MPICC`, `MPICXX` | MPI compiler wrappers used to build LAMMPS | `mpicc`, `mpicxx` from `PATH` |
+| `LAMMPS_SIZES` | integer sizes LAMMPS was built with (its `-D LAMMPS_SIZES`): `smallbig`, `bigbig` or `smallsmall` | `smallbig` |
 | `BUILD_TYPE` | `Release` (-O3) or `Debug` | `Release` |
 | `BUILD_DIR` | output folder | `build` |
 
@@ -106,7 +107,7 @@ MPICC=/opt/openmpi/bin/mpicc MPICXX=/opt/openmpi/bin/mpicxx bash build.sh /path/
 To use CMake directly:
 
 ```bash
-cmake -S . -B build -D LAMMPS_SOURCE_DIR=/path/to/lammps/src -D CMAKE_CXX_COMPILER=mpicxx
+cmake -S . -B build -D LAMMPS_SOURCE_DIR=/path/to/lammps/src -D CMAKE_CXX_COMPILER=mpicxx -D LAMMPS_SIZES=smallbig
 cmake --build build
 ```
 
@@ -185,3 +186,10 @@ For an ionic liquid in a silica pore (10281 atoms), evaluating it on every step 
 | `CMakeLists.txt` | CMake build of the plugin module |
 | `build.sh` | build script with configurable paths |
 | `examples/il_silica/` | test system and input that checks the plugin against `compute stress/atom` |
+| `LICENSE` | GNU General Public License, version 2 |
+
+## License
+
+Copyright (C) 2025-2026 Thomaz R. Ghizoni
+
+This plugin is distributed under the GNU General Public License, version 2 (GPLv2), the same license as LAMMPS. The plugin is compiled against LAMMPS headers and derives from LAMMPS classes, so it must be distributed under the same license. See [`LICENSE`](LICENSE) for the full text.

@@ -20,6 +20,9 @@ MPICXX=${MPICXX:-mpicxx}
 # Release (-O3) or Debug
 BUILD_TYPE=${BUILD_TYPE:-Release}
 
+# integer sizes of the LAMMPS build (its -D LAMMPS_SIZES): smallbig, bigbig or smallsmall
+LAMMPS_SIZES=${LAMMPS_SIZES:-smallbig}
+
 # where the build happens and the .so is written
 BUILD_DIR=${BUILD_DIR:-build}
 
@@ -38,6 +41,7 @@ cmake -S "$HERE" -B "$BUILD_DIR" \
       -D CMAKE_C_COMPILER="$MPICC" \
       -D CMAKE_CXX_COMPILER="$MPICXX" \
       -D CMAKE_BUILD_TYPE="$BUILD_TYPE" \
+      -D LAMMPS_SIZES="$LAMMPS_SIZES" \
       -D LAMMPS_SOURCE_DIR="$(cd "$LAMMPS_SRC" && pwd)"
 
 cmake --build "$BUILD_DIR"
