@@ -5,11 +5,11 @@
 #	||                      University Grenoble Alpes- UGA                     ||# 
 #	||            Laboratoire Interdisciplinaire de Physique - LiPhy           ||# 
 #	||-------------------------------------------------------------------------||# 
-#	||Test of compute stress/atom/resolved on the ionic liquid slit pore       ||#
+#	||Test of compute stress/resolved on the ionic liquid slit pore            ||#
 #	||  liquid-liquid + liquid-solid + solid-solid must equal                  ||#
 #	||  stress/atom NULL pair kspace                                           ||#
 #	||Run with -var newt on  or  -var newt off                                 ||#
-#	||Plugin path: -var plugin /path/to/stress_atom_resolved.so                ||#
+#	||Plugin path: -var plugin /path/to/stress_resolved.so                     ||#
 #	||-------------------------------------------------------------------------||#
 #	||Thomaz Rossetti Ghizoni                                                  ||#
 #	||Feb 2025                                                                 ||#
@@ -20,7 +20,7 @@ variable        temp      equal   300         #|| NVT Temperature [K]
 variable        dt        equal   0.5         #|| Simulation timestep
 variable        seed      index   4928459     #|| Random number
 variable        newt      index   on          #|| newton setting
-variable        plugin    index   ../../build/stress_atom_resolved.so  #|| compiled plugin
+variable        plugin    index   ../../build/stress_resolved.so  #|| compiled plugin
 
 ## INITIALIZATION #############################################################
 units           real
@@ -56,9 +56,9 @@ velocity        all create ${temp} ${seed}
 
 
 # Computes -------------------------------------------------------------------
-compute ll liquid stress/atom/resolved liquid
-compute ls liquid stress/atom/resolved solid
-compute ss solid stress/atom/resolved solid
+compute ll liquid stress/resolved liquid
+compute ls liquid stress/resolved solid
+compute ss solid stress/resolved solid
 compute ref all stress/atom NULL pair kspace
 
 # per-atom |ll + ls + ss - ref| and |ref| for each component

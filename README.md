@@ -1,4 +1,4 @@
-# compute stress/atom/resolved
+# compute stress/resolved
 
 A LAMMPS plugin that computes the stress from the interactions between two groups of atoms, like the stock `compute stress/tally`, but including long-range (Ewald) Coulomb interactions as well as pair interactions. It has the same syntax and outputs as `stress/tally`.
 
@@ -8,12 +8,12 @@ The plugin adds two styles to LAMMPS:
 
 | style | kind | purpose |
 |---|---|---|
-| `stress/atom/resolved` | compute | `stress/tally` with pair + k-space: per-atom stress and a global scalar |
+| `stress/resolved` | compute | `stress/tally` with pair + k-space: per-atom stress and a global scalar |
 | `ewald2` | kspace | the stock LAMMPS `ewald` with its reciprocal-space data exposed to the compute. It gives exactly the same forces, energies and pressures as `ewald`. |
 
 ## What it computes
 
-The same outputs as `compute stress/tally`, for `compute ID group1 stress/atom/resolved group2`:
+The same outputs as `compute stress/tally`, for `compute ID group1 stress/resolved group2`:
 
 | output | content |
 |---|---|
@@ -84,7 +84,7 @@ You need CMake ≥ 3.16, a C++17 compiler and the MPI compiler wrappers that wer
 bash build.sh /path/to/lammps/src
 ```
 
-This writes `build/stress_atom_resolved.so`.
+This writes `build/stress_resolved.so`.
 
 Optional variables, set in the environment:
 
@@ -121,7 +121,7 @@ Both `-z nodelete` and `-rdynamic` are GNU/Linux linker options. On macOS, `CMak
 ## Usage
 
 ```
-compute ID group-ID stress/atom/resolved group2-ID
+compute ID group-ID stress/resolved group2-ID
 ```
 
 - `ID`, `group-ID`: as for any compute. `group-ID` is the first group of the interactions.
@@ -132,7 +132,7 @@ Atoms in neither group get zeros.
 Example: a liquid (types 1–16) against a silica wall (types 17–20). The complete, runnable version is in [`examples/il_silica`](examples/il_silica).
 
 ```
-plugin load     /path/to/build/stress_atom_resolved.so
+plugin load     /path/to/build/stress_resolved.so
 
 units           real
 atom_style      full
@@ -144,7 +144,7 @@ read_data       system.lmpsys
 group           liquid type 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
 group           solid  type 17 18 19 20
 
-compute         ls liquid stress/atom/resolved solid
+compute         ls liquid stress/resolved solid
 
 # per-atom output: liquid atoms get the stress from the solid, solid atoms the stress from the liquid
 dump            d all custom 100 resolved.dump id c_ls[*]
@@ -158,8 +158,8 @@ The array can be used anywhere per-atom arrays are accepted: `dump custom`, `fix
 To check that the parts reproduce LAMMPS's own per-atom stress:
 
 ```
-compute ll  liquid stress/atom/resolved liquid
-compute ss  solid  stress/atom/resolved solid
+compute ll  liquid stress/resolved liquid
+compute ss  solid  stress/resolved solid
 compute ref all stress/atom NULL pair kspace
 variable d1 atom abs(c_ll[1]+c_ls[1]+c_ss[1]-c_ref[1])
 ```
@@ -177,9 +177,9 @@ For an ionic liquid in a silica pore (10281 atoms), evaluating it on every step 
 
 | file | content |
 |---|---|
-| `compute_stress_atom_resolved.h/.cpp` | the compute |
+| `compute_stress_resolved.h/.cpp` | the compute |
 | `ewald2.h` | `Ewald2`, a subclass of LAMMPS's `Ewald` that exposes k-vectors, `ug`, `vg`, `cs`, `sn` and `scale` |
-| `stress_atom_resolved_plugin.cpp` | plugin entry point, registers `ewald2` and `stress/atom/resolved` |
+| `stress_resolved_plugin.cpp` | plugin entry point, registers `ewald2` and `stress/resolved` |
 | `CMakeLists.txt` | CMake build of the plugin module |
 | `build.sh` | build script with configurable paths |
 | `examples/il_silica/` | test system and input that checks the plugin against `compute stress/atom` |

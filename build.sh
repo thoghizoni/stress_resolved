@@ -1,6 +1,6 @@
 #!/bin/bash
-# Builds the stress_atom_resolved plugin (compute stress/atom/resolved + kspace_style ewald2)
-# into $BUILD_DIR/stress_atom_resolved.so
+# Builds the stress_resolved plugin (compute stress/resolved + kspace_style ewald2)
+# into $BUILD_DIR/stress_resolved.so
 #
 # usage: bash build.sh /path/to/lammps/src
 #    or: LAMMPS_SRC=/path/to/lammps/src bash build.sh
@@ -42,4 +42,4 @@ cmake -S "$HERE" -B "$BUILD_DIR" \
 
 cmake --build "$BUILD_DIR"
 
-echo "built $(cd "$BUILD_DIR" && pwd)/stress_atom_resolved.so"
+echo "built $(cd "$BUILD_DIR" && pwd)/stress_resolved.so"

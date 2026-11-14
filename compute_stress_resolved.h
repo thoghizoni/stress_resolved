@@ -1,19 +1,19 @@
 /* -*- c++ -*- ----------------------------------------------------------
-   compute stress/atom/resolved: pair + kspace version of compute stress/tally,
+   compute stress/resolved: pair + kspace version of compute stress/tally,
    per-atom and global virial from interactions between group and group2
 ------------------------------------------------------------------------- */
 
-#ifndef LMP_COMPUTE_STRESS_ATOM_RESOLVED_H
-#define LMP_COMPUTE_STRESS_ATOM_RESOLVED_H
+#ifndef LMP_COMPUTE_STRESS_RESOLVED_H
+#define LMP_COMPUTE_STRESS_RESOLVED_H
 
 #include "compute.h"
 
 namespace LAMMPS_NS {
 
-class ComputeStressAtomResolved : public Compute {
+class ComputeStressResolved : public Compute {
  public:
-  ComputeStressAtomResolved(class LAMMPS *, int, char **);
-  ~ComputeStressAtomResolved() override;
+  ComputeStressResolved(class LAMMPS *, int, char **);
+  ~ComputeStressResolved() override;
   void init() override;
   void init_list(int, class NeighList *) override;
   double compute_scalar() override;

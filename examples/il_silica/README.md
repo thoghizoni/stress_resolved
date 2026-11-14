@@ -5,9 +5,9 @@ This example tests a build of the plugin. The system has 10281 atoms: an ionic l
 The input defines
 
 ```
-compute ll liquid stress/atom/resolved liquid
-compute ls liquid stress/atom/resolved solid
-compute ss solid stress/atom/resolved solid
+compute ll liquid stress/resolved liquid
+compute ls liquid stress/resolved solid
+compute ss solid stress/resolved solid
 compute ref all stress/atom NULL pair kspace
 ```
 
@@ -29,10 +29,10 @@ Build the plugin first (see the main README). Then, from this folder:
 mpirun -np 4 lmp -in il_silica.lmp
 ```
 
-Replace `lmp` with the name of your LAMMPS executable (`lmp_mpi`, …). By default the input loads `../../build/stress_atom_resolved.so`. If the plugin is somewhere else, give its path:
+Replace `lmp` with the name of your LAMMPS executable (`lmp_mpi`, …). By default the input loads `../../build/stress_resolved.so`. If the plugin is somewhere else, give its path:
 
 ```bash
-mpirun -np 4 lmp -in il_silica.lmp -var plugin /path/to/stress_atom_resolved.so
+mpirun -np 4 lmp -in il_silica.lmp -var plugin /path/to/stress_resolved.so
 ```
 
 To test with newton off, add `-var newt off`.

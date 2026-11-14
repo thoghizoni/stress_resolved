@@ -1,6 +1,6 @@
 /* -*- c++ -*- ----------------------------------------------------------
    Ewald2: stock LAMMPS Ewald with the reciprocal-space data needed by
-   compute stress/atom/resolved exposed as public members
+   compute stress/resolved exposed as public members
 ------------------------------------------------------------------------- */
 
 #ifndef LMP_EWALD2_H

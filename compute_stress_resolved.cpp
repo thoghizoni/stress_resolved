@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------
-   compute ID group stress/atom/resolved group2
+   compute ID group stress/resolved group2
 
    same outputs as compute stress/tally, with kspace added:
      per-atom array with 6 columns xx,yy,zz,xy,xz,yz, same sign and units
@@ -13,7 +13,7 @@
      b = group2 only, c = both
 ------------------------------------------------------------------------- */
 
-#include "compute_stress_atom_resolved.h"
+#include "compute_stress_resolved.h"
 
 #include "atom.h"
 #include "comm.h"
@@ -32,15 +32,15 @@ using namespace LAMMPS_NS;
 
 /* ---------------------------------------------------------------------- */
 
-ComputeStressAtomResolved::ComputeStressAtomResolved(LAMMPS *lmp, int narg, char **arg) :
+ComputeStressResolved::ComputeStressResolved(LAMMPS *lmp, int narg, char **arg) :
     Compute(lmp, narg, arg), stress(nullptr), sfac(nullptr), sfac_all(nullptr), list(nullptr),
     ewald(nullptr)
 {
-  if (narg != 4) error->all(FLERR, "Illegal compute stress/atom/resolved command");
+  if (narg != 4) error->all(FLERR, "Illegal compute stress/resolved command");
 
   int igroup2 = group->find(arg[3]);
   if (igroup2 == -1)
-    error->all(FLERR, "Could not find compute stress/atom/resolved second group ID {}", arg[3]);
+    error->all(FLERR, "Could not find compute stress/resolved second group ID {}", arg[3]);
   groupbit2 = group->bitmask[igroup2];
 
   scalar_flag = 1;
@@ -55,7 +55,7 @@ ComputeStressAtomResolved::ComputeStressAtomResolved(LAMMPS *lmp, int narg, char
 
 /* ---------------------------------------------------------------------- */
 
-ComputeStressAtomResolved::~ComputeStressAtomResolved()
+ComputeStressResolved::~ComputeStressResolved()
 {
   memory->destroy(stress);
   memory->destroy(sfac);
@@ -64,21 +64,21 @@ ComputeStressAtomResolved::~ComputeStressAtomResolved()
 
 /* ---------------------------------------------------------------------- */
 
-void ComputeStressAtomResolved::init()
+void ComputeStressResolved::init()
 {
   if (force->pair == nullptr)
-    error->all(FLERR, "Compute stress/atom/resolved requires a pair style");
+    error->all(FLERR, "Compute stress/resolved requires a pair style");
   if (force->pair->single_enable == 0)
-    error->all(FLERR, "Pair style does not support compute stress/atom/resolved");
+    error->all(FLERR, "Pair style does not support compute stress/resolved");
 
   ewald = nullptr;
   if (force->kspace) {
     ewald = dynamic_cast<Ewald2 *>(force->kspace);
-    if (!ewald) error->all(FLERR, "Compute stress/atom/resolved requires kspace_style ewald2");
+    if (!ewald) error->all(FLERR, "Compute stress/resolved requires kspace_style ewald2");
     if (ewald->slabflag)
-      error->all(FLERR, "Compute stress/atom/resolved does not support kspace slab correction");
+      error->all(FLERR, "Compute stress/resolved does not support kspace slab correction");
     if (!ewald->compute_flag)
-      error->all(FLERR, "Compute stress/atom/resolved requires kspace_modify compute yes");
+      error->all(FLERR, "Compute stress/resolved requires kspace_modify compute yes");
   }
 
   neighbor->add_request(this, NeighConst::REQ_OCCASIONAL);
@@ -86,14 +86,14 @@ void ComputeStressAtomResolved::init()
 
 /* ---------------------------------------------------------------------- */
 
-void ComputeStressAtomResolved::init_list(int /*id*/, NeighList *ptr)
+void ComputeStressResolved::init_list(int /*id*/, NeighList *ptr)
 {
   list = ptr;
 }
 
 /* ---------------------------------------------------------------------- */
 
-double ComputeStressAtomResolved::compute_scalar()
+double ComputeStressResolved::compute_scalar()
 {
   invoked_scalar = update->ntimestep;
   if (invoked_peratom != invoked_scalar) compute_peratom();
@@ -113,14 +113,14 @@ double ComputeStressAtomResolved::compute_scalar()
 
 /* ---------------------------------------------------------------------- */
 
-void ComputeStressAtomResolved::compute_peratom()
+void ComputeStressResolved::compute_peratom()
 {
   invoked_peratom = update->ntimestep;
 
   if (atom->nmax > nmax) {
     memory->destroy(stress);
     nmax = atom->nmax;
-    memory->create(stress, nmax, 6, "stress/atom/resolved:stress");
+    memory->create(stress, nmax, 6, "stress/resolved:stress");
     array_atom = stress;
   }
 
@@ -147,7 +147,7 @@ void ComputeStressAtomResolved::compute_peratom()
    same ghost logic as Pair::ev_tally()
 ------------------------------------------------------------------------- */
 
-void ComputeStressAtomResolved::compute_pair()
+void ComputeStressResolved::compute_pair()
 {
   int i, j, ii, jj, jnum, itype, jtype;
   double xtmp, ytmp, ztmp, delx, dely, delz, rsq, fpair, factor_coul, factor_lj;
@@ -228,7 +228,7 @@ void ComputeStressAtomResolved::compute_pair()
    reuses cs/sn computed by Ewald2 for the current positions
 ------------------------------------------------------------------------- */
 
-void ComputeStressAtomResolved::compute_kspace()
+void ComputeStressResolved::compute_kspace()
 {
   int i, k, c, kx, ky, kz;
   double cypz, sypz, exprl, expim, sre, sim, partial;
@@ -250,8 +250,8 @@ void ComputeStressAtomResolved::compute_kspace()
     memory->destroy(sfac);
     memory->destroy(sfac_all);
     kmax_sfac = kcount;
-    memory->create(sfac, 6 * kmax_sfac, "stress/atom/resolved:sfac");
-    memory->create(sfac_all, 6 * kmax_sfac, "stress/atom/resolved:sfac_all");
+    memory->create(sfac, 6 * kmax_sfac, "stress/resolved:sfac");
+    memory->create(sfac_all, 6 * kmax_sfac, "stress/resolved:sfac_all");
   }
 
   // partial structure factors: sfac[6k+0,1] = Re,Im S_a  sfac[6k+2,3] = Re,Im S_b
@@ -318,7 +318,7 @@ void ComputeStressAtomResolved::compute_kspace()
 
 /* ---------------------------------------------------------------------- */
 
-int ComputeStressAtomResolved::pack_reverse_comm(int n, int first, double *buf)
+int ComputeStressResolved::pack_reverse_comm(int n, int first, double *buf)
 {
   int m = 0;
   int last = first + n;
@@ -329,7 +329,7 @@ int ComputeStressAtomResolved::pack_reverse_comm(int n, int first, double *buf)
 
 /* ---------------------------------------------------------------------- */
 
-void ComputeStressAtomResolved::unpack_reverse_comm(int n, int *list, double *buf)
+void ComputeStressResolved::unpack_reverse_comm(int n, int *list, double *buf)
 {
   int m = 0;
   for (int i = 0; i < n; i++) {
@@ -340,7 +340,7 @@ void ComputeStressAtomResolved::unpack_reverse_comm(int n, int *list, double *bu
 
 /* ---------------------------------------------------------------------- */
 
-double ComputeStressAtomResolved::memory_usage()
+double ComputeStressResolved::memory_usage()
 {
   return (double) nmax * 6 * sizeof(double) + (double) kmax_sfac * 12 * sizeof(double);
 }
